@@ -1,0 +1,13 @@
+.Canvas {
+    background: #eee;
+    display: flex;
+    height: 100%;
+    flex-grow: 1;
+  }
+  
+  .Canvas .bg {
+    background: #333;
+    height: 512px;
+    margin: auto;
+    width: 512px;
+  }
