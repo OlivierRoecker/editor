@@ -1,15 +1,25 @@
+// @flow
+
 import React, { Component } from 'react'
 import './Canvas.css'
 
-class Canvas extends Component {
-  render() {
-    const { bgColor } = this.props
-    return (
-      <div className="Canvas">
-        <div className="bg" style={{ backgroundColor: bgColor }}/>
-      </div>
-    )
-  }
+type Props = {
+  bgColor: string,
+  bgSize: number,
+  fgColor: string,
 }
 
-export default Canvas
+class Canvas extends Component<Props> {
+    render() {
+      const { bgColor, bgSize, fgColor } = this.props
+      return (
+        <div className="Canvas">
+          <div className="bg" style={{ backgroundColor: bgColor, height: bgSize, width: bgSize }}>
+            <div className="fg" style={{ backgroundColor: fgColor }} />
+          </div>
+        </div>
+      )
+    }
+  }
+  
+  export default Canvas

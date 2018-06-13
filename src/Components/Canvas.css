@@ -7,7 +7,15 @@
   
   .Canvas .bg {
     background: #333;
+    display: flex;
     height: 512px;
     margin: auto;
     width: 512px;
+  }
+  
+  .Canvas .fg {
+    background: #000;
+    height: 25%;
+    margin: auto;
+    width: 25%;
   }
