@@ -1,10 +1,14 @@
 .Canvas {
-    background: #eee;
-    display: flex;
-    height: 100%;
-    flex-grow: 1;
-  }
-  
-  svg {
-    margin: auto;
-  }
+  background: #eee;
+  display: flex;
+  height: 100%;
+  flex-grow: 1;
+}
+
+svg {
+  margin: auto;
+}
+
+path {
+  transform-origin: 50% 50%;
+}

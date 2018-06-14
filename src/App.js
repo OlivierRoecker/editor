@@ -6,9 +6,16 @@ import Canvas from './Components/Canvas';
 import Sidebar from './Components/Sidebar';
 
 type State = {
-  bgColor: string,
-  bgSize: number,
-  fgColor: string,
+  bg: {
+    color: string,
+    size: number,
+  },
+  fg: {
+    color: string,
+    rotate: number,
+    scalex: number,
+    scaley: number,
+  },
 }
 
 type Color = {
@@ -17,43 +24,67 @@ type Color = {
 
 class App extends Component<{}, State> {
   state = {
-    bgColor: 'green',
-    bgSize: 512,
-    fgColor: 'yellow',
+    bg: {
+      color: 'green',
+      size: 512,
+    },
+    fg: {
+      color: 'yellow',
+      rotate: 0,
+      scalex: 1,
+      scaley: 1,
+    },
   }
 
   handleBgColorChange = ({ hex }: Color) => {
     this.setState({
-      bgColor: hex,
+      bg: { ...this.state.bg, color: hex },
     })
   }
 
   handleBgSizeChange = (evt: SyntheticEvent<HTMLButtonElement>) => {
     this.setState({
-      bgSize: Number(evt.currentTarget.value),
+      bg: {
+        ...this.state.bg,
+        size: Number(evt.currentTarget.value),
+      },
     })
   }
 
   handleFgColorChange = ({ hex }: Color) => {
     this.setState({
-      fgColor: hex,
+      fg: { ...this.state.fg, color: hex },
+    })
+  }
+
+  handleFgRotateChange = (offset: number) => {
+    this.setState({
+      fg: { ...this.state.fg, rotate: this.state.fg.rotate + offset },
+    })
+  }
+
+  handleFgScaleChange = (axis: string) => {
+    const key = `scale${axis}`
+    this.setState({
+      fg: { ...this.state.fg, [key]: this.state.fg[key] * -1 },
     })
   }
 
   render() {
-    const { bgColor, bgSize, fgColor } = this.state
+    const { bg, fg } = this.state
 
     return (
       <div className="App">
         <Sidebar
-          bgColor={bgColor}
-          bgSize={bgSize}
-          fgColor={fgColor}
+          bg={bg}
+          fg={fg}
           handleBgColorChange={this.handleBgColorChange}
           handleBgSizeChange={this.handleBgSizeChange}
           handleFgColorChange={this.handleFgColorChange}
+          handleFgRotateChange={this.handleFgRotateChange}
+          handleFgScaleChange={this.handleFgScaleChange}
         />
-        <Canvas bgColor={bgColor} bgSize={bgSize} fgColor={fgColor} />
+        <Canvas bg={bg} fg={fg} />
       </div>
     )
   }
