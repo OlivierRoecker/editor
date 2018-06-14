@@ -5,6 +5,10 @@ import './App.css';
 import Canvas from './Components/Canvas';
 import Sidebar from './Components/Sidebar';
 
+const getFgRotateUpdater = offset => prevState => ({
+  fg: { ...prevState.fg, rotate: prevState.fg.rotate + offset },
+})
+
 type State = {
   bg: {
     color: string,
@@ -15,6 +19,7 @@ type State = {
     rotate: number,
     scalex: number,
     scaley: number,
+    filename: string,
   },
 }
 
@@ -33,7 +38,16 @@ class App extends Component<{}, State> {
       rotate: 0,
       scalex: 1,
       scaley: 1,
+      filename: ''
     },
+  }
+
+  componentDidMount() {
+    // this.intervalId = setInterval(() => this.handleFgRotateChange(10), 1)
+  }
+
+  componentWillUnmount() {
+    // clearInterval(this.intervalId)
   }
 
   handleBgColorChange = ({ hex }: Color) => {
@@ -58,15 +72,19 @@ class App extends Component<{}, State> {
   }
 
   handleFgRotateChange = (offset: number) => {
-    this.setState({
-      fg: { ...this.state.fg, rotate: this.state.fg.rotate + offset },
-    })
+    this.setState(getFgRotateUpdater(offset))
   }
 
   handleFgScaleChange = (axis: string) => {
     const key = `scale${axis}`
     this.setState({
       fg: { ...this.state.fg, [key]: this.state.fg[key] * -1 },
+    })
+  }
+
+  handleFilenameChange = evt => {
+    this.setState({
+      fg: { ...this.state.fg, filename: evt.currentTarget.value },
     })
   }
 
@@ -83,6 +101,7 @@ class App extends Component<{}, State> {
           handleFgColorChange={this.handleFgColorChange}
           handleFgRotateChange={this.handleFgRotateChange}
           handleFgScaleChange={this.handleFgScaleChange}
+          handleFilenameChange={this.handleFilenameChange}
         />
         <Canvas bg={bg} fg={fg} />
       </div>

@@ -3,7 +3,6 @@
 import React, { Component } from 'react'
 import './Sidebar.css'
 
-import Picker from './Picker'
 import SectionWithColorPicker from './SectionWithColorPicker'
 import MouseProvider from './MouseProvider'
 
@@ -26,7 +25,10 @@ type Props = {
   handleFgColorChange: Function,
   handleFgRotateChange: Function,
   handleFgScaleChange: Function,
+  handleFilenameChange: Function,
 }
+
+const filenames = ['werewolf.svg', 'vampire.svg']
 
 class Sidebar extends Component<Props> {
   render() {
@@ -38,6 +40,7 @@ class Sidebar extends Component<Props> {
       handleFgColorChange,
       handleFgRotateChange,
       handleFgScaleChange,
+      handleFilenameChange,
     } = this.props
 
     return (
@@ -72,12 +75,13 @@ class Sidebar extends Component<Props> {
             <button onClick={() => handleFgScaleChange('x')}>x</button>
             <button onClick={() => handleFgScaleChange('y')}>y</button>
           </div>
-          <div>
-            <select>
-              <option value="Vampire">Vampire </option>
-              <option value="Werewolf">Werewolf </option>
-            </select>
-          </div>
+          <select value={fg.filename} onChange={handleFilenameChange}>
+            {filenames.map(f => (
+              <option key={f} value={f}>
+                {f}
+              </option>
+            ))}
+          </select>
         </SectionWithColorPicker>
 
         <MouseProvider>
