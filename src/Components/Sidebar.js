@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import './Sidebar.css'
+import store from './store'
 
 import SectionWithColorPicker from './SectionWithColorPicker'
 import MouseProvider from './MouseProvider'
@@ -19,29 +20,13 @@ type Props = {
     scalex: number,
     scaley: number,
   },
-  // actions
-  handleBgColorChange: Function,
-  handleBgSizeChange: Function,
-  handleFgColorChange: Function,
-  handleFgRotateChange: Function,
-  handleFgScaleChange: Function,
-  handleFilenameChange: Function,
 }
 
 const filenames = ['werewolf.svg', 'vampire.svg']
 
 class Sidebar extends Component<Props> {
   render() {
-    const {
-      bg,
-      fg,
-      handleBgColorChange,
-      handleBgSizeChange,
-      handleFgColorChange,
-      handleFgRotateChange,
-      handleFgScaleChange,
-      handleFilenameChange,
-    } = this.props
+    const { bg, fg } = this.props
 
     return (
       <aside className="Sidebar">
@@ -49,7 +34,9 @@ class Sidebar extends Component<Props> {
           title="Background"
           subtitle={<h3>Salut</h3>}
           color={bg.color}
-          handleChange={handleBgColorChange}>
+          handleChange={({ hex }) =>
+            store.dispatch({ type: 'CHANGE_BG_COLOR', payload: { color: hex } })
+          }>
           <div>
             size:{' '}
             {sizes.map(size => (
@@ -57,7 +44,12 @@ class Sidebar extends Component<Props> {
                 className={size === bg.size ? 'active' : ''}
                 key={size}
                 value={size}
-                onClick={handleBgSizeChange}>
+                onClick={() =>
+                  store.dispatch({
+                    type: 'CHANGE_BG_SIZE',
+                    payload: { size: Number(size) },
+                  })
+                }>
                 {size}
               </button>
             ))}
@@ -68,14 +60,55 @@ class Sidebar extends Component<Props> {
           title="Foreground"
           color={fg.color}
           subtitle={<h6>Salut</h6>}
-          handleChange={handleFgColorChange}>
+          handleChange={({ hex }) =>
+            store.dispatch({ type: 'CHANGE_FG_COLOR', payload: { color: hex } })
+          }>
           <div>
-            <button onClick={() => handleFgRotateChange(-10)}>-10</button>
-            <button onClick={() => handleFgRotateChange(+10)}>+10</button>
-            <button onClick={() => handleFgScaleChange('x')}>x</button>
-            <button onClick={() => handleFgScaleChange('y')}>y</button>
+            <button
+              onClick={() =>
+                store.dispatch({
+                  type: 'CHANGE_FG_ROTATE',
+                  payload: { offset: -10 },
+                })
+              }>
+              -10
+            </button>
+            <button
+              onClick={() =>
+                store.dispatch({
+                  type: 'CHANGE_FG_ROTATE',
+                  payload: { offset: 10 },
+                })
+              }>
+              +10
+            </button>
+            <button
+              onClick={() =>
+                store.dispatch({
+                  type: 'CHANGE_FG_SCALE',
+                  payload: { axis: 'x' },
+                })
+              }>
+              x
+            </button>
+            <button
+              onClick={() =>
+                store.dispatch({
+                  type: 'CHANGE_FG_SCALE',
+                  payload: { axis: 'y' },
+                })
+              }>
+              y
+            </button>
           </div>
-          <select value={fg.filename} onChange={handleFilenameChange}>
+          <select
+            value={fg.filename}
+            onChange={evt =>
+              store.dispatch({
+                type: 'CHANGE_FG_FILENAME',
+                payload: { filename: evt.currentTarget.value },
+              })
+            }>
             {filenames.map(f => (
               <option key={f} value={f}>
                 {f}

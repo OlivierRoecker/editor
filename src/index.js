@@ -4,14 +4,18 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
+import store from './Components/store'
 
 // $FlowFixMe
-ReactDOM.render(<App />, document.getElementById('root'))
 
-/// scratch pad
+const refresh = () => {
+  ReactDOM.render(
+    <App reduxState={store.getState()} />,
+    document.getElementById('root'),
+  )
+}
 
-const REGEX = /fill=".*?" d="(.*)"/
-fetch('werewolf.svg')
-  .then(HTTPRes => HTTPRes.text())
-  .then(text => REGEX.exec(text)[1])
-  .then(console.log)
+store.subscribe(refresh)
+
+// init
+refresh()
