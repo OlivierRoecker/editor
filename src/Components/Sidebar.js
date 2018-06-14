@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import './Sidebar.css'
 
 import Picker from './Picker'
+import SectionWithColorPicker from './SectionWithColorPicker'
 
 const sizes = [...Array(6).keys()].map(i => 2 ** (i + 4))
 
@@ -15,6 +16,8 @@ type Props = {
   fg: {
     color: string,
     rotate: number,
+    scalex: number,
+    scaley: number,
   },
   // actions
   handleBgColorChange: Function,
@@ -25,18 +28,24 @@ type Props = {
 }
 
 class Sidebar extends Component<Props> {
-  renderButtons() {
-    const { bg, handleBgSizeChange } = this.props
+  state = {
+    mouseX: 0,
+    mouseY: 0,
+  }
 
-    return sizes.map(size => (
-      <button
-        className={size === bg.size ? 'active' : ''}
-        key={size}
-        value={size}
-        onClick={handleBgSizeChange}>
-        {size}
-      </button>
-    ))
+  handleMouseMove = ({ x, y }) => {
+    this.setState({
+      mouseX: x,
+      mouseY: y,
+    })
+  }
+
+  componentDidMount() {
+    window.addEventListener('mousemove', this.handleMouseMove)
+  }
+
+  componentWillUnmount() {
+    window.removeListener(this.handleMouseMove)
   }
 
   render() {
@@ -44,6 +53,7 @@ class Sidebar extends Component<Props> {
       bg,
       fg,
       handleBgColorChange,
+      handleBgSizeChange,
       handleFgColorChange,
       handleFgRotateChange,
       handleFgScaleChange,
@@ -51,26 +61,42 @@ class Sidebar extends Component<Props> {
 
     return (
       <aside className="Sidebar">
-        <section>
-          <h2>Background</h2>
-          <label>
-            color:{' '}
-            <Picker color={bg.color} handleChange={handleBgColorChange} />
-          </label>
-          <div>size: {this.renderButtons()}</div>
-        </section>
-        <section>
-          <h2>Foreground</h2>
-          <label>
-            color:{' '}
-            <Picker color={fg.color} handleChange={handleFgColorChange} />
-          </label>
+        <SectionWithColorPicker
+          title="Background"
+          subtitle={<h3>Salut</h3>}
+          color={bg.color}
+          handleChange={handleBgColorChange}>
+          <div>
+            size:{' '}
+            {sizes.map(size => (
+              <button
+                className={size === bg.size ? 'active' : ''}
+                key={size}
+                value={size}
+                onClick={handleBgSizeChange}>
+                {size}
+              </button>
+            ))}
+          </div>
+        </SectionWithColorPicker>
+
+        <SectionWithColorPicker
+          title="Foreground"
+          color={fg.color}
+          subtitle={<h6>Salut</h6>}
+          handleChange={handleFgColorChange}>
           <div>
             <button onClick={() => handleFgRotateChange(-10)}>-10</button>
             <button onClick={() => handleFgRotateChange(+10)}>+10</button>
             <button onClick={() => handleFgScaleChange('x')}>x</button>
             <button onClick={() => handleFgScaleChange('y')}>y</button>
           </div>
+        </SectionWithColorPicker>
+
+        <section>
+          <h2>Coords</h2>
+          <label>x {this.state.mouseX}</label>
+          <label>y {this.state.mouseY}</label>
         </section>
       </aside>
     )
