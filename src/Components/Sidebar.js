@@ -5,6 +5,7 @@ import './Sidebar.css'
 
 import Picker from './Picker'
 import SectionWithColorPicker from './SectionWithColorPicker'
+import MouseProvider from './MouseProvider'
 
 const sizes = [...Array(6).keys()].map(i => 2 ** (i + 4))
 
@@ -28,26 +29,6 @@ type Props = {
 }
 
 class Sidebar extends Component<Props> {
-  state = {
-    mouseX: 0,
-    mouseY: 0,
-  }
-
-  handleMouseMove = ({ x, y }) => {
-    this.setState({
-      mouseX: x,
-      mouseY: y,
-    })
-  }
-
-  componentDidMount() {
-    window.addEventListener('mousemove', this.handleMouseMove)
-  }
-
-  componentWillUnmount() {
-    window.removeListener(this.handleMouseMove)
-  }
-
   render() {
     const {
       bg,
@@ -91,13 +72,23 @@ class Sidebar extends Component<Props> {
             <button onClick={() => handleFgScaleChange('x')}>x</button>
             <button onClick={() => handleFgScaleChange('y')}>y</button>
           </div>
+          <div>
+            <select>
+              <option value="Vampire">Vampire </option>
+              <option value="Werewolf">Werewolf </option>
+            </select>
+          </div>
         </SectionWithColorPicker>
 
-        <section>
-          <h2>Coords</h2>
-          <label>x {this.state.mouseX}</label>
-          <label>y {this.state.mouseY}</label>
-        </section>
+        <MouseProvider>
+          {(mouseX, mouseY) => (
+            <section>
+              <h2>Coords</h2>
+              <label>x {mouseX}</label>
+              <label>y {mouseY}</label>
+            </section>
+          )}
+        </MouseProvider>
       </aside>
     )
   }
