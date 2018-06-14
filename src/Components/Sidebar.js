@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { SketchPicker } from 'react-color'
+import Picker from './Picker.js'
 import './Sidebar.css'
 
 const sizes = [...Array(6).keys()].map(i => 2 ** (i + 4))
@@ -41,14 +41,14 @@ class Sidebar extends Component<Props> {
         <section>
           <h2>Background</h2>
           <label>
-            color: <SketchPicker color={bgColor} onChange={handleBgColorChange} />
+            color: <Picker color={bgColor} handleChange={handleBgColorChange} />
           </label>
           <div>size: {buttons}</div>
         </section>
         <section>
           <h2>Foreground</h2>
           <label>
-            color: <SketchPicker color={fgColor} onChange={handleFgColorChange} />
+            color: <Picker color={fgColor} handleChange={handleFgColorChange} />
           </label>
         </section>
       </aside>
