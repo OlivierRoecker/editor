@@ -2,20 +2,17 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
 import './index.css'
 import App from './App'
 import store from './Components/store'
 
 // $FlowFixMe
 
-const refresh = () => {
-  ReactDOM.render(
-    <App reduxState={store.getState()} />,
-    document.getElementById('root'),
-  )
-}
-
-store.subscribe(refresh)
-
-// init
-refresh()
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  // $FlowFixMe
+  document.getElementById('root'),
+)

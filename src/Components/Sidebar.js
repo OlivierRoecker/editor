@@ -1,8 +1,8 @@
 // @flow
 
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import './Sidebar.css'
-import store from './store'
 
 import SectionWithColorPicker from './SectionWithColorPicker'
 import MouseProvider from './MouseProvider'
@@ -26,7 +26,7 @@ const filenames = ['werewolf.svg', 'vampire.svg']
 
 class Sidebar extends Component<Props> {
   render() {
-    const { bg, fg } = this.props
+    const { bg, fg, changeBgColor, dispatch } = this.props
 
     return (
       <aside className="Sidebar">
@@ -34,9 +34,7 @@ class Sidebar extends Component<Props> {
           title="Background"
           subtitle={<h3>Salut</h3>}
           color={bg.color}
-          handleChange={({ hex }) =>
-            store.dispatch({ type: 'CHANGE_BG_COLOR', payload: { color: hex } })
-          }>
+          handleChange={({ hex }) => changeBgColor(hex)}>
           <div>
             size:{' '}
             {sizes.map(size => (
@@ -45,7 +43,7 @@ class Sidebar extends Component<Props> {
                 key={size}
                 value={size}
                 onClick={() =>
-                  store.dispatch({
+                  dispatch({
                     type: 'CHANGE_BG_SIZE',
                     payload: { size: Number(size) },
                   })
@@ -61,12 +59,12 @@ class Sidebar extends Component<Props> {
           color={fg.color}
           subtitle={<h6>Salut</h6>}
           handleChange={({ hex }) =>
-            store.dispatch({ type: 'CHANGE_FG_COLOR', payload: { color: hex } })
+            dispatch({ type: 'CHANGE_FG_COLOR', payload: { color: hex } })
           }>
           <div>
             <button
               onClick={() =>
-                store.dispatch({
+                dispatch({
                   type: 'CHANGE_FG_ROTATE',
                   payload: { offset: -10 },
                 })
@@ -75,7 +73,7 @@ class Sidebar extends Component<Props> {
             </button>
             <button
               onClick={() =>
-                store.dispatch({
+                dispatch({
                   type: 'CHANGE_FG_ROTATE',
                   payload: { offset: 10 },
                 })
@@ -84,7 +82,7 @@ class Sidebar extends Component<Props> {
             </button>
             <button
               onClick={() =>
-                store.dispatch({
+                dispatch({
                   type: 'CHANGE_FG_SCALE',
                   payload: { axis: 'x' },
                 })
@@ -93,7 +91,7 @@ class Sidebar extends Component<Props> {
             </button>
             <button
               onClick={() =>
-                store.dispatch({
+                dispatch({
                   type: 'CHANGE_FG_SCALE',
                   payload: { axis: 'y' },
                 })
@@ -104,7 +102,7 @@ class Sidebar extends Component<Props> {
           <select
             value={fg.filename}
             onChange={evt =>
-              store.dispatch({
+              dispatch({
                 type: 'CHANGE_FG_FILENAME',
                 payload: { filename: evt.currentTarget.value },
               })
@@ -131,4 +129,13 @@ class Sidebar extends Component<Props> {
   }
 }
 
-export default Sidebar
+const mapStateToProps = state => ({
+  bg: state.bg,
+  fg: state.fg,
+})
+
+const mapActionsToProps = {
+  changeBgColor
+}
+
+export default connect(mapStateToProps, mapActionsToProps)(Sidebar)

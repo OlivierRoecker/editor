@@ -1,6 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import './Canvas.css'
 
 type Props = {
@@ -69,4 +70,9 @@ class Canvas extends Component<Props, State> {
   }
 }
 
-export default Canvas
+const mapStateToProps = state => ({
+  bg: state.bg,
+  fg: state.fg,
+})
+
+export default connect(mapStateToProps)(Canvas)
